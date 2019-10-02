@@ -206,11 +206,12 @@ fn list(options: getopts::Matches) {
     }
 }
 
-#[cfg(any(unix, target_os = "redox"))]
+#[cfg(any(unix, target_os = "redox", target_os = "wasi"))]
 fn sort_entries(entries: &mut Vec<PathBuf>, options: &getopts::Matches) {
     let mut reverse = options.opt_present("r");
     if options.opt_present("t") {
         if options.opt_present("c") {
+            #[cfg(not(target_os = "wasi"))]
             entries.sort_by_key(|k| {
                 Reverse(get_metadata(k, options).map(|md| md.ctime()).unwrap_or(0))
             });
@@ -225,6 +226,7 @@ fn sort_entries(entries: &mut Vec<PathBuf>, options: &getopts::Matches) {
             });
         }
     } else if options.opt_present("S") {
+        #[cfg(not(target_os = "wasi"))]
         entries.sort_by_key(|k| get_metadata(k, options).map(|md| md.size()).unwrap_or(0));
         reverse = !reverse;
     } else if !options.opt_present("U") {
@@ -368,19 +370,22 @@ fn display_items(items: &Vec<PathBuf>, strip: Option<&Path>, options: &getopts::
                     }
                 });
 
-            if let Some(size) = termsize::get() {
-                let mut grid = Grid::new(GridOptions {
-                    filling: Filling::Spaces(2),
-                    direction: Direction::TopToBottom,
-                });
+            #[cfg(not(target_os = "wasi"))]
+            {
+                if let Some(size) = termsize::get() {
+                    let mut grid = Grid::new(GridOptions {
+                        filling: Filling::Spaces(2),
+                        direction: Direction::TopToBottom,
+                    });
 
-                for name in names {
-                    grid.add(name);
-                }
+                    for name in names {
+                        grid.add(name);
+                    }
 
-                if let Some(output) = grid.fit_into_width(size.cols as usize) {
-                    print!("{}", output);
-                    return;
+                    if let Some(output) = grid.fit_into_width(size.cols as usize) {
+                        print!("{}", output);
+                        return;
+                    }
                 }
             }
         }

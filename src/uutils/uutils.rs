@@ -44,8 +44,11 @@ fn main() {
     // try binary name as util name.
     let args0 = args[0].clone();
     let binary = Path::new(&args0[..]);
-    let binary_as_util = binary.file_stem().unwrap().to_str().unwrap();
+    let mut binary_as_util = binary.file_stem().unwrap().to_str().unwrap();
 
+    if binary_as_util.starts_with("\"wapm run ") {
+        binary_as_util = &binary_as_util[10..binary_as_util.len()-1];
+    }
     if let Some(&uumain) = umap.get(binary_as_util) {
         std::process::exit(uumain(args));
     }

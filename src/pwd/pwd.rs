@@ -66,7 +66,13 @@ Print the full filename of the current working directory.",
     } else if matches.opt_present("version") {
         println!("{} {}", NAME, VERSION);
     } else {
-        match env::current_dir() {
+        #[cfg(target_os = "wasi")]
+        let current_dir = env::var("PWD").map(|dir| PathBuf::from(dir));
+
+        #[cfg(not(target_os = "wasi"))]
+        let current_dir = env::current_dir();
+
+        match current_dir {
             Ok(logical_path) => {
                 if matches.opt_present("logical") {
                     println!("{}", logical_path.display());

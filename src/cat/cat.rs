@@ -21,6 +21,8 @@ extern crate uucore;
 use quick_error::ResultExt;
 use std::fs::{metadata, File};
 use std::io::{self, stderr, stdin, stdout, BufWriter, Read, Write};
+
+#[cfg(not(target_os = "wasi"))]
 use uucore::fs::is_stdin_interactive;
 
 /// Unix domain socket support
@@ -35,6 +37,12 @@ static SYNTAX: &str = "[OPTION]... [FILE]...";
 static SUMMARY: &str = "Concatenate FILE(s), or standard input, to standard output
  With no FILE, or when FILE is -, read standard input.";
 static LONG_HELP: &str = "";
+
+
+#[cfg(target_os = "wasi")]
+fn is_stdin_interactive() -> bool {
+    true
+}
 
 #[derive(PartialEq)]
 enum NumberingMode {
