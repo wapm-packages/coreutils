@@ -1,0 +1,76 @@
+[package]
+name = "coreutils"
+version = "0.0.1"
+description = "Cross-platform WASI rewrite of the GNU coreutils"
+readme = "README-wapm.md"
+repository = "https://github.com/uutils/coreutils"
+
+[[module]]
+name = "uutils"
+source = "target/wasm32-wasi/release/uutils.wasm"
+abi = "wasi"
+interfaces = {wasi= "0.0.0-unstable"}
+
+[[command]]
+name = "ls"
+module = "uutils"
+
+[[command]]
+name = "cat"
+module = "uutils"
+
+[[command]]
+name = "echo"
+module = "uutils"
+
+[[command]]
+name = "mv"
+module = "uutils"
+
+[[command]]
+name = "env"
+module = "uutils"
+
+[[command]]
+name = "mkdir"
+module = "uutils"
+
+[[command]]
+name = "basename"
+module = "uutils"
+
+[[command]]
+name = "dirname"
+module = "uutils"
+
+[[command]]
+name = "base64"
+module = "uutils"
+
+[[command]]
+name = "base32"
+module = "uutils"
+
+[[command]]
+name = "sum"
+module = "uutils"
+
+[[command]]
+name = "printf"
+module = "uutils"
+
+[[command]]
+name = "wc"
+module = "uutils"
+
+[[command]]
+name = "pwd"
+module = "uutils"
+
+# [[command]]
+# name = "cksum"
+# module = "uutils"
+
+# [[command]]
+# name = "hashsum"
+# module = "uutils"
