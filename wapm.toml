@@ -1,9 +1,10 @@
 [package]
 name = "coreutils"
-version = "0.0.1"
+version = "0.0.2"
 description = "Cross-platform WASI rewrite of the GNU coreutils"
 readme = "README-wapm.md"
 repository = "https://github.com/uutils/coreutils"
+rename-commands-to-raw-command-name = true
 
 [[module]]
 name = "uutils"
